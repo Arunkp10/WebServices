@@ -1,0 +1,332 @@
+extend layout
+
+block script
+	script(src="js/test.js")
+	script(src="/socket.io/socket.io.js")
+	script(src="js/ace/ace.js")
+
+	script.
+		var Id = !{id};
+
+block style
+	style.
+		.btn-file {
+		position: relative;
+		overflow: hidden;
+		}
+		.btn-file input[type=file] {
+		position: absolute;
+		top: 0;
+		right: 0;
+		min-width: 100%;
+		min-height: 100%;
+		font-size: 100px;
+		text-align: right;
+		filter: alpha(opacity=0);
+		opacity: 0;
+		outline: none;
+		background: white;
+		cursor: inherit;
+		display: block;
+		}
+
+block content
+	.container
+		h4
+			ol.breadcrumb.bc-heading
+				li
+					a.text-muted(href="./suites") Suites
+				li
+					a.text-muted(href="#")#suite-name
+				li.active
+					span.text-info#test-name
+
+		.panel.panel-primary
+			.panel-heading Test detail
+			.panel-body.details
+				dl.dl-horizontal
+					dt Description
+					dd#test-description &nbsp;
+					dt Targets
+					dd#test-targets &nbsp;
+					dt Test record id
+					dd#test-record-id &nbsp;
+			.panel-footer
+				.btn-group
+					button.btn.btn-success.dropdown-toggle(data-toggle="dropdown") Actions&nbsp;
+						span.caret
+					ul.dropdown-menu
+						li: a#test-submit(href="#") Submit test
+						li: a#set-targets(href="#") Set targets
+						li: a#delete-test(href="#") Delete test
+
+		.panel.panel-primary
+			.panel-heading#show-files(style="cursor: pointer") Files&nbsp;
+				span
+					span.caret
+			#files-div(style="display: none")
+				table.table.table-hover#files-table(style="margin: 0px")
+					thead
+						tr
+							th.col-md-1 ID
+							th.col-md-2 Type
+							th.col-md-4 Filename
+							th
+					tbody
+				.panel-footer
+					.btn-group
+						button.btn.btn-success.dropdown-toggle(data-toggle="dropdown") Actions&nbsp;
+							span.caret
+						ul.dropdown-menu
+							li: a#new-file(href="#") Create new text file
+							li: a#upload-files(href="#") Upload files
+
+		.panel.panel-primary
+			.panel-heading#show-resources(style="cursor: pointer") Resources&nbsp;
+				span
+					span.caret
+			#resources-div(style="display: none")
+				table.table.table-hover#resources-table(style="margin: 0px")
+					thead
+						tr
+							th.col-md-1 ID
+							th.col-md-2 Type
+							th.col-md-4 Description
+							th
+					tbody
+				.panel-footer
+					.btn-group
+						button.btn.btn-success.dropdown-toggle(data-toggle="dropdown") Actions&nbsp;
+							span.caret
+						ul.dropdown-menu
+							li: a#new-resource(href="#") Create new resource
+
+		.panel.panel-primary
+			.panel-heading Runs
+			table.table.table-hover#runs-table
+				thead
+					tr
+						th.col-md-1 ID
+						th.col-md-3 Submitted
+						th Description
+						th.col-md-2 Targets done
+						th.col-md-2 Outcome
+				tbody
+
+		#delete-confirm.modal.fade(tabindex="-1", data-backdrop="static", data-keyboard="false")
+			.modal-dialog
+				.modal-content
+					.modal-header
+						h3 Delete test
+					.modal-body
+						form.form-horizontal
+							.form-group
+								label.control-label.col-xs-4 Test
+								.col-xs-6
+									p.form-control-static#delete-test-name
+							.form-group
+								label.control-label.col-xs-4 Confirm
+								.col-xs-6
+									input.form-control#delete-confirm-name(type="text")
+						p
+							strong.text-danger To delete this test type the test name into the Confirm box above and click Delete. ALL DATA FOR THIS TEST WILL BE DELETED!
+						.alert.alert-danger.gd-alert#alert-bad-delete
+							span
+					.modal-footer
+						button.btn.btn-primary(data-dismiss="modal") Cancel
+						button.btn.btn-danger Delete
+
+		#create-test.modal.fade(tabindex="-1", data-backdrop="static", data-keyboard="false")
+			.modal-dialog
+				.modal-content
+					.modal-header
+						h3 New test
+					.modal-body
+						form.form-horizontal
+							.form-group
+								label.control-label.col-xs-4 Name
+								.col-xs-6
+									input.form-control#create-test-name(type="text")
+						.alert.alert-danger.gd-alert#alert-bad-create
+							span
+					.modal-footer
+						button.btn.btn-warning(data-dismiss="modal") Cancel
+						button.btn.btn-primary Create
+
+		#upload-modal.modal.fade(tabindex="-1", data-backdrop="static", data-keyboard="false")
+			.modal-dialog
+				.modal-content
+					.modal-header
+						h3 Upload files
+					.modal-body
+						form.form-horizontal
+							.form-group
+								label.control-label.col-xs-4 Files
+								.col-xs-6#file-list
+						.alert.alert-danger.gd-alert#alert-bad-upload
+							span
+					.modal-footer
+						span.btn.btn-success.btn-file.pull-left Add files
+							input(type="file",multiple="multiple")#add-files
+						button.btn.btn-warning(data-dismiss="modal") Cancel
+						button.btn.btn-primary Upload
+
+		#targets-modal.modal.fade(tabindex="-1", data-backdrop="static", data-keyboard="false")
+			.modal-dialog
+				.modal-content
+					.modal-header
+						h3 Set targets
+					.modal-body
+						table.table.table-condensed.table-hover#targets-table
+							tbody
+						.row
+							.col-sm-3
+								input(type="text").form-control#new-target
+							button.btn.btn-success#add-target Add
+						.row
+							.col-sm-1
+								&nbsp;
+						.alert.alert-danger.gd-alert#alert-bad-set-targets
+							span
+					.modal-footer
+						button.btn.btn-warning(data-dismiss="modal") Cancel
+						button.btn.btn-primary Save
+
+		#submit-modal.modal.fade(tabindex="-1", data-backdrop="static", data-keyboard="false")
+			.modal-dialog
+				.modal-content
+					.modal-header
+						h3 Submit test
+					.modal-body
+						form.form-horizontal
+							.form-group
+								label.control-label.col-xs-4 Run description
+								.col-xs-6
+									input.form-control#submit-description(type="text")
+						.alert.alert-danger.gd-alert#alert-bad-submit
+							span
+					.modal-footer
+						button.btn.btn-warning(data-dismiss="modal") Cancel
+						button.btn.btn-primary Submit
+
+		#edit-modal.modal.fade(tabindex="-1", data-backdrop="static", data-keyboard="false")
+			.modal-dialog.modal-lg
+				.modal-content
+					.modal-header
+						h3.edit-title
+					.modal-body
+						div#editor(style="height: 500px;")
+						.alert.alert-danger.gd-alert#alert-bad-edit
+							span
+					.modal-footer
+						button.btn.btn-warning(data-dismiss="modal") Cancel
+						button.btn.btn-primary Save
+
+		#new-file-modal.modal.fade(tabindex="-1", data-backdrop="static", data-keyboard="false")
+			.modal-dialog
+				.modal-content
+					.modal-header
+						h3 New text file
+					.modal-body
+						form.form-horizontal
+							.form-group
+								label.control-label.col-xs-4 Filename
+								.col-xs-6
+									input.form-control#new-file-name(type="text")
+						.alert.alert-danger.gd-alert#alert-bad-new-file
+							span
+					.modal-footer
+						button.btn.btn-warning(data-dismiss="modal") Cancel
+						button.btn.btn-primary Create
+
+		#delete-file-modal.modal.fade(tabindex="-1", data-backdrop="static", data-keyboard="false")
+			.modal-dialog
+				.modal-content
+					.modal-header
+						h3 Delete file
+					.modal-body
+						form.form-horizontal
+							.form-group
+								label.control-label.col-xs-4 File
+								.col-xs-6
+									p.form-control-static#delete-file-name
+						p
+							strong.text-danger Click Delete to proceed. THE FILE WILL BE PERMANENTLY DELETED!
+						.alert.alert-danger.gd-alert#alert-bad-delete-file
+							span
+					.modal-footer
+						button.btn.btn-primary(data-dismiss="modal") Cancel
+						button.btn.btn-danger Delete
+
+		#new-resource-modal.modal.fade(tabindex="-1", data-backdrop="static", data-keyboard="false")
+			.modal-dialog
+				.modal-content
+					.modal-header
+						h3 New resource
+					.modal-body
+						ul.nav.nav-pills
+							li
+								a(href="#github", data-toggle="tab") Github
+							li
+								a(href="#s3", data-toggle="tab") Amazon S3
+						.tab-content
+							.tab-pane(id="github")
+								p &emsp;
+								form.form-horizontal
+									.form-group
+										label.control-label.col-xs-4 Description
+										.col-xs-6
+											input.form-control#new-github-name(type="text")
+									.form-group
+										label.control-label.col-xs-4 Owner
+										.col-xs-6
+											input.form-control#new-github-owner(type="text")
+									.form-group
+										label.control-label.col-xs-4 Repository
+										.col-xs-6
+											input.form-control#new-github-repository(type="text")
+									.form-group
+										label.control-label.col-xs-4 Path
+										.col-xs-6
+											input.form-control#new-github-path(type="text")
+											span.help-block Enter the path to a specific file, or a directory name to add all files in that directory.
+							.tab-pane(id="s3")
+								p &emsp;
+								form.form-horizontal
+									.form-group
+										label.control-label.col-xs-4 Description
+										.col-xs-6
+											input.form-control#new-s3-name(type="text")
+									.form-group
+										label.control-label.col-xs-4 Bucket
+										.col-xs-6
+											input.form-control#new-s3-bucket(type="text")
+									.form-group
+										label.control-label.col-xs-4 Path
+										.col-xs-6
+											input.form-control#new-s3-path(type="text")
+						.alert.alert-danger.gd-alert#alert-bad-new-resource
+							span
+					.modal-footer
+						button.btn.btn-warning(data-dismiss="modal") Cancel
+						button.btn.btn-primary Save
+
+		#delete-resource-modal.modal.fade(tabindex="-1", data-backdrop="static", data-keyboard="false")
+			.modal-dialog
+				.modal-content
+					.modal-header
+						h3 Delete resource
+					.modal-body
+						form.form-horizontal
+							.form-group
+								label.control-label.col-xs-4 Resource
+								.col-xs-6
+									p.form-control-static#delete-resource-name
+						p
+							strong.text-danger Click Delete to proceed. THE RESOURCE WILL BE PERMANENTLY DELETED!
+						.alert.alert-danger.gd-alert#alert-bad-delete-resource
+							span
+					.modal-footer
+						button.btn.btn-primary(data-dismiss="modal") Cancel
+						button.btn.btn-danger Delete
+

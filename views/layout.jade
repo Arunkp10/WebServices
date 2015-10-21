@@ -1,0 +1,129 @@
+mixin page-heading (title)
+	h3.well= title
+		if block
+			block
+
+doctype html
+
+html(xmlns="http://www.w3.org/1999/xhtml")
+	head
+		meta(charset="utf-8")
+		meta(http-equiv="X-UA-Compatible", content="IE=edge")
+		meta(name="viewport", content="width=device-width, initial-scale=1")
+		title ATS 3
+
+		link(href="css/bootstrap.min.css", rel="stylesheet")
+		style.
+			body { padding-top: 60px; }
+			.ajax-spinner
+			{
+				display: none;
+				position: absolute;
+				width: 120px; height: 120px;
+				left: 50%; top: 50%;
+				margin-left: -60px; margin-top: -60px;
+				background-image: url('img/ajax-loader.gif');
+				background-repeat: no-repeat;
+				background-position: center center;
+			}
+			.gd-alert { display: none; }
+			a:hover {text-decoration: none;}
+			.bc-heading {padding: 19px;}
+			.details dd {margin-top: 8px; margin-bottom: 8px;}
+			.details .dl-horizontal {margin: 0px;}
+
+		block style
+
+		script(src="js/jquery-1.11.0.min.js")
+		script(src="js/bootstrap.min.js")
+
+		script.
+			$(document).ready(function()
+			{
+				//- $('a[href$="'+window.location.pathname+'"]').parent().addClass('active');
+
+				$('.alert > .close').click(function()
+				{
+					$(this).parent().slideUp('fast');
+				});
+
+				// Prevent ENTER submitting forms
+				$('form').keydown (function(e)
+				{
+					if (e.which == 13)
+						e.preventDefault();
+				});
+			});
+
+			$(document).ajaxStart(function()
+			{
+				$('.ajax-spinner').show();
+			});
+
+			$(document).ajaxStop(function()
+			{
+				$('.ajax-spinner').hide();
+			});
+
+			function showAlert (element)
+			{
+				element.slideDown('fast', function()
+				{
+					window.setTimeout (function()
+					{
+						element.slideUp ('fast');
+					}, 1000);
+				});
+			}
+
+			function capitaliseFirstLetter(string)
+			{
+				return string.charAt(0).toUpperCase() + string.slice(1);
+			}
+
+			function callServer (operation, data, callback)
+			{
+				data.operation = operation;
+
+				$.ajax(
+				{
+					url: './interface',
+					type: 'POST',
+					data: data,
+					dataType: 'json',
+					success: function(response)
+					{
+						if (response.result == 'ok')
+						{
+							callback (null, response);
+						}
+						else
+						{
+							console.error(response.message);
+							callback (response.message);
+						}
+					},
+					error: function(xhr, status, error)
+					{
+						console.error (error);
+						callback (error);
+					}
+				});
+			}
+
+
+
+		block script
+
+	body
+		.well.ajax-spinner
+
+		nav.navbar.navbar-default.navbar-fixed-top
+			.container
+				.navbar-header
+					a.navbar-brand(href="./suites") ATS 3
+					ul.nav.navbar-nav
+						//- li: a(href="./dashboard") Dashboard
+						//- li: a(href="./suites") Suites
+
+		block content

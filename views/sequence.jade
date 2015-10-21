@@ -1,0 +1,60 @@
+extend layout
+
+block script
+	script(src="js/sequence.js")
+	script(src="/socket.io/socket.io.js")
+	script(src="js/ace/ace.js")
+
+	script.
+		var Id = !{id};
+
+block content
+	.container
+		h4
+			ol.breadcrumb.bc-heading
+				li
+					a.text-muted(href="./suites") Suites
+				li
+					a.text-muted(href="#")#suite-name
+				li.active
+					span.text-info#sequence-name
+
+		.panel.panel-primary
+			.panel-heading Sequence detail
+			.panel-body.details
+				dl.dl-horizontal
+					dt Description
+					dd#sequence-description &nbsp;
+					dt Sequence record id
+					dd#sequence-record-id &nbsp;
+			.panel-footer
+				.btn-group
+					button.btn.btn-success.dropdown-toggle(data-toggle="dropdown") Actions&nbsp;
+						span.caret
+					ul.dropdown-menu
+						li: a#start-sequence(href="#") Start sequence
+						li: a#stop-sequence(href="#") Stop sequence
+						li: a#edit-script(href="#") Edit script
+
+		.panel.panel-primary
+			.panel-heading Log
+			table.table.table-hover#log-table
+				thead
+					tr
+						th.col-md-1 Severity
+						th.col-md-3 Created
+						th Entry
+				tbody
+
+		#edit-modal.modal.fade(tabindex="-1", data-backdrop="static", data-keyboard="false")
+			.modal-dialog
+				.modal-content
+					.modal-header
+						h3 Edit script
+					.modal-body
+						div#editor(style="height: 400px;")
+						.alert.alert-danger.gd-alert#alert-bad-edit
+							span
+					.modal-footer
+						button.btn.btn-warning(data-dismiss="modal") Cancel
+						button.btn.btn-primary Save

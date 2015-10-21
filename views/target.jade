@@ -1,0 +1,91 @@
+extend layout
+
+block script
+	script(src="js/target.js")
+	script(src="/socket.io/socket.io.js")
+
+	script.
+		//- Add id as JavaScript variable on page
+		var Id = !{id};
+
+block content
+	.container
+		h4
+			ol.breadcrumb.bc-heading
+				li
+					a.text-muted(href="./suites") Suites
+				li
+					a.text-muted(href="#")#suite-name
+				li
+					a.text-muted(href="#")#test-name
+				li
+					a.text-muted(href="#")#run-name
+				li.active
+					span.text-info#target-name
+
+		.panel.panel-primary
+			.panel-heading Target detail
+			.panel-body.details
+				dl.dl-horizontal
+					dt Name
+					dd#target-title
+						&nbsp;
+					dt Status
+					dd#target-status
+						&nbsp;
+					dt Outcome
+					dd#target-outcome
+						&nbsp;
+					dt Agent name
+					dd#target-agent-name
+						&nbsp;
+					dt Agent id
+					dd#target-agent-id
+						&nbsp;
+					dt Target record id
+					dd#target-record-id
+						&nbsp;
+			.panel-footer
+				.btn-group
+					button.btn.btn-success.dropdown-toggle(data-toggle="dropdown") Actions&nbsp;
+						span.caret
+					ul.dropdown-menu
+						li: a#cancel-target(href="#") Cancel target
+
+		.panel.panel-primary
+			.panel-heading Log&emsp;
+				.checkbox-inline#log-severity
+					label.checkbox-inline
+						input(type="checkbox", data-severity="debug")
+						span Debug
+					label.checkbox-inline
+						input(type="checkbox", data-severity="info")
+						span Info
+					label.checkbox-inline
+						input(type="checkbox", data-severity="warning")
+						span Warning
+					label.checkbox-inline
+						input(type="checkbox", data-severity="error", checked)
+						span Error
+			table.table.table-hover#log-table
+				thead
+					tr
+						th.col-md-1 Severity
+						th.col-md-3 Created
+						th Entry
+				tbody
+
+		#confirm-cancel.modal.fade(tabindex="-1", data-backdrop="static", data-keyboard="false")
+			.modal-dialog
+				.modal-content
+					.modal-header
+						h3 Cancel target
+					.modal-body
+						p
+							strong.text-danger To cancel this target click Proceed. THIS TARGET WILL BE CANCELLED AND THE TEST RUN WILL BE FAILED!
+						.alert.alert-danger.gd-alert#alert-bad-cancel
+							span
+					.modal-footer
+						button.btn.btn-warning(data-dismiss="modal") Close
+						button.btn.btn-danger Proceed
+

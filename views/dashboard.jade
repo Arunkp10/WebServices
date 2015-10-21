@@ -1,0 +1,14 @@
+extend layout
+
+block script
+	script(src="js/dashboard.js")
+
+block content
+	.container
+		+page-heading('Dashboard')
+		table.table#tests-table
+			thead
+				tr
+					th.col-md-6 Name
+					th.col-md-2 Status
+			tbody

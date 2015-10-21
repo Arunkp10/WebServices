@@ -1,0 +1,44 @@
+extend layout
+
+block script
+	script(src="js/run.js")
+	script(src="/socket.io/socket.io.js")
+
+	script.
+		//- Add test id as JavaScript variable on page
+		var Id = !{id};
+
+block content
+	.container
+		h4
+			ol.breadcrumb.bc-heading
+				li
+					a.text-muted(href="./suites") Suites
+				li
+					a.text-muted(href="#")#suite-name
+				li
+					a.text-muted(href="#")#test-name
+				li.active
+					span.text-info#run-name
+
+		.panel.panel-primary
+			.panel-heading Run detail
+			.panel-body.details
+				dl.dl-horizontal
+					dt Submitted
+					dd#run-submitted &nbsp;
+					dt Description
+					dd#run-description &nbsp;
+					dt Run record id
+					dd#run-record-id &nbsp;
+
+		.panel.panel-primary
+			.panel-heading Targets
+			table.table.table-hover#targets-table
+				thead
+					tr
+						th.col-md-2 Name
+						th.col-md-2 Status
+						th.col-md-2 Outcome
+						th Executing agent
+				tbody

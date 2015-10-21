@@ -1,0 +1,49 @@
+extend layout
+
+block script
+
+	script.
+		//- Add suite id as JavaScript variable on page
+		var Id = !{id};
+		var des = !{des};
+	script(src="js/jscharts.js")
+	script(src="js/summary.js")
+
+block content
+	.container
+		h4
+			ol.breadcrumb.bc-heading
+				li
+					a.text-muted(href="./suites") Suites
+				li.active
+					span.text-info#heading
+
+		.panel.panel-primary
+			.panel-heading#summaryHeading
+			table.table.table-hover#tests-Summary-table
+				tbody
+					tr
+						td(style="width:250px;font-size:25px") Pass
+						td(style="width:100px;font-size:25px;color:green;font-weight:bold")#passCount 0
+						td(rowspan=4)
+							div#graph
+					tr
+						td(style="width:250px;font-size:25px") Fail
+						td(style="width:100px;font-size:25px;color:red;font-weight:bold")#failCount 0
+					tr
+						td(style="width:250px;font-size:25px") NoRun
+						td(style="width:100px;font-size:25px;font-weight:bold")#noRunCount 0
+					tr
+						td(style="width:250px;font-size:25px;font-weight:bold") Total
+						td(style="width:100px;font-size:25px;font-weight:bold")#totalCount 0
+		.panel.panel-primary
+			.panel-heading Test Details
+			table.table.table-hover#tests-table
+				thead
+					tr
+						th.col-md-3 Name
+						th.col-md-2 Description
+						th.col-md-2 Device
+						th.col-md-2 Total Pass
+						th.col-md-2 Total Fail
+				tbody

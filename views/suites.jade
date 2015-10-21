@@ -1,0 +1,19 @@
+extend layout
+
+block script
+	script(src="js/suites.js")
+
+block content
+	.container
+		h4
+			ol.breadcrumb.bc-heading
+				li.active
+					span.text-info Home
+		.panel.panel-primary
+			.panel-heading Suites
+			table.table.table-hover#suites-table
+				thead
+					tr
+						th.col-md-6 Name
+						th.col-md-3 Number of tests
+				tbody

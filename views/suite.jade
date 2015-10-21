@@ -1,0 +1,79 @@
+extend layout
+
+block script
+	script(src="js/suite.js")
+
+	script.
+		//- Add suite id as JavaScript variable on page
+		var Id = !{id};
+
+block content
+	.container
+		h4
+			ol.breadcrumb.bc-heading
+				li
+					a.text-muted(href="./suites") Suites
+				li.active
+					span.text-info#heading
+
+		.panel.panel-primary
+			.panel-heading Suite detail
+			.panel-body.details
+				dl.dl-horizontal
+					dt Name
+					dd#suite-name&nbsp;
+					dt Number of tests
+					dd#suite-test-count &nbsp;
+					dt Suite record id
+					dd#suite-record-id &nbsp;
+			.panel-footer
+				.btn-group
+					button.btn.btn-success.dropdown-toggle(data-toggle="dropdown") Actions&nbsp;
+						span.caret
+					ul.dropdown-menu
+						li: a#new-test(href="#") Create test
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				.btn-group
+					button.btn.btn-success.dropdown-toggle(data-toggle="dropdown") View Summary&nbsp;
+						span.caret
+					ul.dropdown-menu#summary(style="height:200px; width:18%;overflow:hidden; overflow-y:scroll;")
+
+		.panel.panel-primary
+			.panel-heading Tests
+			table.table.table-hover#tests-table
+				thead
+					tr
+						th.col-md-6 Name
+						th.col-md-3 Last outcome
+				tbody
+
+		//
+			.panel.panel-primary
+				.panel-heading Sequences
+				table.table.table-hover#sequences-table
+					thead
+						tr
+							th.col-md-1 ID
+							th Name
+					tbody
+
+		#create-test.modal.fade(tabindex="-1", data-backdrop="static", data-keyboard="false")
+			.modal-dialog
+				.modal-content
+					.modal-header
+						h3 Create test
+					.modal-body
+						form.form-horizontal
+							.form-group
+								label.control-label.col-xs-4 Name
+								.col-xs-6
+									input.form-control#create-test-name(type="text")
+							.form-group
+								label.control-label.col-xs-4 Description
+								.col-xs-6
+									input.form-control#create-test-description(type="text")
+						.alert.alert-danger.gd-alert#alert-bad-create
+							span
+					.modal-footer
+						button.btn.btn-warning(data-dismiss="modal") Cancel
+						button.btn.btn-primary Create
