@@ -1,7 +1,7 @@
 {
-	"server_ip": "10.233.82.107",
-	"server_port": 3001,
-	"database": "postgres://localhost/autotest",
+	"server_ip": "10.186.2.76",
+	"server_port": 3030,
+	"database": "postgres://localhost/services",
 	"aws":
 	{
 		"accessKeyId": "AKIAJNSEK6GY227YBZZQ",

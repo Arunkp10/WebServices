@@ -118,9 +118,9 @@ global.io.on ('connection', function (socket)
 var basicAuth = function (request, response, next)
 {
 	var user = auth (request);
-	if (!user || user.name != 'ats3user' || user.pass != '2ebra')
+	if (!user || user.name != 'admin' || user.pass != 'admin')
 	{
-		response.set ('WWW-Authenticate', 'Basic realm=ATS 3 authentication required');
+		response.set ('WWW-Authenticate', 'Basic realm=Authentication required');
 		response.sendStatus (401);
 	}
 	else
@@ -186,15 +186,21 @@ app.post ('/interface', function (request, response)
 });
 
 // Redirect default page
-app.get ('/', basicAuth, function (request, response)
-{
-	response.redirect ('suites');
+app.get ('/', basicAuth, function (request, response){
+	response.redirect ('services');
 });
 
-// Render suites page
-app.get ('/suites', basicAuth, function (request, response, next)
-{
-	response.render ('suites', {pretty: true});
+// Render services page
+app.get ('/services', basicAuth, function (request, response, next){
+	response.render ('services', {pretty: true});
+});
+
+app.get('/callServices', basicAuth, function (request, response, next){
+	response.render('callServices',{pretty: true, id: request.query.id});
+});
+
+app.get('/displaySummary', basicAuth, function (request, response, next){
+	response.render('displaySummary',{pretty: true});
 });
 
 // Render suite detail page
@@ -205,57 +211,9 @@ app.get ('/suite', basicAuth, function (request, response)
 		response.send (404);
 		return;
 	}
-
 	response.render ('suite', {pretty: true, id: request.query.id});
 });
 
-// Render sequence detail page
-app.get ('/sequence', basicAuth, function (request, response)
-{
-	if (!request.query.id)
-	{
-		response.send (404);
-		return;
-	}
-
-	response.render ('sequence', {pretty: true, id: request.query.id});
-});
-
-// Render test detail page
-app.get ('/test', basicAuth, function (request, response)
-{
-	if (!request.query.id)
-	{
-		response.send (404);
-		return;
-	}
-
-	response.render ('test', {pretty: true, id: request.query.id});
-});
-
-// Render test run detail page
-app.get ('/run', basicAuth, function (request, response)
-{
-	if (!request.query.id)
-	{
-		response.send (404);
-		return;
-	}
-
-	response.render ('run', {pretty: true, id: request.query.id});
-});
-
-// Render test target detail page
-app.get ('/target', basicAuth, function (request, response)
-{
-	if (!request.query.id)
-	{
-		response.send (404);
-		return;
-	}
-
-	response.render ('target', {pretty: true, id: request.query.id});
-});
 
 // Render summary details page.
 

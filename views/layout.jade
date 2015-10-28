@@ -10,7 +10,7 @@ html(xmlns="http://www.w3.org/1999/xhtml")
 		meta(charset="utf-8")
 		meta(http-equiv="X-UA-Compatible", content="IE=edge")
 		meta(name="viewport", content="width=device-width, initial-scale=1")
-		title ATS 3
+		title Web Services Server
 
 		link(href="css/bootstrap.min.css", rel="stylesheet")
 		style.
@@ -83,6 +83,7 @@ html(xmlns="http://www.w3.org/1999/xhtml")
 
 			function callServer (operation, data, callback)
 			{
+				console.log("Data : " + JSON.stringify(data));
 				data.operation = operation;
 
 				$.ajax(
@@ -121,7 +122,7 @@ html(xmlns="http://www.w3.org/1999/xhtml")
 		nav.navbar.navbar-default.navbar-fixed-top
 			.container
 				.navbar-header
-					a.navbar-brand(href="./suites") ATS 3
+					a.navbar-brand(href="./services") Server Console
 					ul.nav.navbar-nav
 						//- li: a(href="./dashboard") Dashboard
 						//- li: a(href="./suites") Suites
