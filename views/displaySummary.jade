@@ -1,0 +1,47 @@
+extend layout
+
+block script
+
+	script(src="js/jscharts.js")
+	script(src="js/displaySummary.js")
+
+block content
+	.container
+		h4
+			ol.breadcrumb.bc-heading
+				li
+					a.text-muted(href="./services") Services
+				li.active
+					span.text-info#heading
+
+		.panel.panel-primary#get
+				.panel-heading Get Summary
+				.panel-body.details
+					dl.dl-horizontal
+						dt PatientId
+						dd#suite-name&nbsp; 
+							input#getPatientId(type="text")
+				.panel-footer
+					.btn-group
+						button.btn.btn-success.dropdown-toggle#getHealthData Call WebService API
+
+		.panel.panel-primary
+			.panel-heading#summaryHeading Summary Graph
+			table.table.table-hover#tests-Summary-table
+				tbody
+					tr
+						td
+							div#graph
+
+		.panel.panel-primary#data
+			.panel-heading Data
+			table.table.table-hover#data-table
+				thead
+					tr
+						th.col-md-2 Doctor
+						th.col-md-2 Nurse
+						th.col-md-2 Machine
+						th.col-md-2 Patient
+						th.col-md-2 Blood Pressure
+						th.col-md-2 Pulse Rate
+				tbody

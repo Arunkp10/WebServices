@@ -1,0 +1,79 @@
+extend layout
+
+block script
+	script(src="js/callServices.js")
+
+	script.
+		//- Add suite id as JavaScript variable on page
+		var Id = !{id};
+	script(src="js/callServices.js")
+
+block content
+	.container
+		h4
+			ol.breadcrumb.bc-heading
+				li
+					a.text-muted(href="./services") Services
+				li.active
+					span.text-info#heading
+	
+			.panel.panel-primary#insert
+				.panel-heading Insert Health Data
+				.panel-body.details
+					dl.dl-horizontal
+						dt Doctor Id
+						dd#suite-name&nbsp; 
+							input#docId(type="text")
+						dt Nurse Id
+						dd#suite-test-count &nbsp;
+							input#nurId(type="text")
+						dt Patient Id
+						dd#suite-test-count &nbsp;
+							input#patId(type="text")
+						dt Machine Id
+						dd#suite-test-count &nbsp;
+							input#macId(type="text")
+						dt Blood Pressure
+						dd#suite-test-count &nbsp;
+							input#bloodPres(type="text")
+						dt Pulse Rate
+						dd#suite-record-id &nbsp;
+							input#pulseRate(type="text")
+				.panel-footer
+					.btn-group
+						button.btn.btn-success.dropdown-toggle#insertHealthData Call WebService API
+			.panel.panel-primary#get
+				.panel-heading Get Health Data
+				.panel-body.details
+					dl.dl-horizontal
+						dt PatientId
+						dd#suite-name&nbsp; 
+							input#getPatientId(type="text")
+				.panel-footer
+					.btn-group
+						button.btn.btn-success.dropdown-toggle#getHealthData Call WebService API
+
+		.panel.panel-primary
+			.panel-heading Response
+			table.table.table-hover#tests-table
+				thead
+					tr
+						th.col-md-6 Status
+						th.col-md-3 Message
+				tbody
+
+		.panel.panel-primary#data
+			.panel-heading Data
+			table.table.table-hover#data-table
+				thead
+					tr
+						th.col-md-2 Doctor
+						th.col-md-2 Nurse
+						th.col-md-2 Machine
+						th.col-md-2 Patient
+						th.col-md-2 Blood Pressure
+						th.col-md-2 Pulse Rate
+				tbody
+
+		script.
+			callRefresh();

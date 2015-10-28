@@ -1,0 +1,19 @@
+extend layout
+
+block script
+	script(src="js/services.js")
+
+block content
+	.container
+		h4
+			ol.breadcrumb.bc-heading
+				li.active
+					span.text-info Home
+		.panel.panel-primary
+			.panel-heading Web Services
+			table.table.table-hover#suites-table
+				thead
+					tr
+						th.col-md-6 Name of Web Services
+						th.col-md-3 Call Web Services
+				tbody
