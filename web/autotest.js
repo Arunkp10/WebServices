@@ -154,15 +154,31 @@ app.get ('/package/:filename', function (request, response)
 /* Main REST interface handler {{{1 */
 app.post ('/interface', function (request, response)
 {
+	var callPush = false;
+	var systolicOutOfRange = false;
+	var diastolicOutOfRange = false;
 	try
 	{
 		if (!('operation' in request.body))
 			throw 'Missing parameter: operation';
 
-		console.log ('Processing operation: ' + request.body.operation);
-
 		if (!(request.body.operation in handlers))
 			throw 'Unknown operation: ' + request.body.operation;
+
+		if(request.body.operation == "insert_health_data"){
+			if(request.body.bloodPressureMin > nconf.get('diastolicMaxRange') || request.body.bloodPressureMin < nconf.get('diastolicMinRange')){
+				console.log("OUT OF RANGE !!! ");
+				diastolicOutOfRange = true;
+
+			}
+			if(request.body.bloodPressureMax > nconf.get('systolicMaxRange') || request.body.bloodPressureMax < nconf.get('systolicMinRange')){
+				console.log("OUT OF RANGE !!! ");
+				systolicOutOfRange = true;
+			}
+			if(systolicOutOfRange || diastolicOutOfRange){
+				console.log("Push service Call !");
+			}
+		}
 
 		var handler = handlers [request.body.operation].createHandler();
 		handler.on ('done', function (err, answer)

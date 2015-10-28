@@ -6,5 +6,9 @@
 	{
 		"accessKeyId": "AKIAJNSEK6GY227YBZZQ",
 		"secretAccessKey": "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"
-	}
+	},
+	"systolicMaxRange":120,
+	"systolicMinRange":90,
+	"diastolicMaxRange":80,
+	"diastolicMinRange":50
 }

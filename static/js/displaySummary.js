@@ -14,7 +14,8 @@ $(document).ready(function(){
 			'<td  class="text-primary">' + data.nurseid + '</td>' +
 			'<td  class="text-primary">' + data.machineid + '</td>' +
 			'<td  class="text-primary">' + data.patientid + '</td>' +
-			'<td  class="text-primary">' + data.bloodpressure + '</td>' +
+			'<td  class="text-primary">' + data.bloodpressuremin + '</td>' +
+			'<td  class="text-primary">' + data.bloodpressuremax + '</td>' +
 			'<td  class="text-primary">' + data.pulserate + '</td>' +
 			'</tr>';
 			var xDate = new Date(data.timestamp);
@@ -22,7 +23,7 @@ $(document).ready(function(){
 			var minute = xDate.getMinutes();
 			var second = xDate.getSeconds();
 			var timeSt = hour + ":" + minute + ":" + second;
-			var newArr = [timeSt, data.bloodpressure];
+			var newArr = [timeSt, data.bloodpressuremax];
 			var newArr2 = [timeSt, data.pulserate];
 			myData.push(newArr);
 			myData2.push(newArr2);

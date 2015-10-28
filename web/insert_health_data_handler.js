@@ -14,13 +14,14 @@ function Handler ()
 		var nurseId = query.nurseId;
 		var patientId = query.patientId;
 		var machineId = query.machineId;
-		var bloodPressure = query.bloodPressure;
-		var pulseRate = query.pulseRate;
+		var bloodPressureMin = parseInt(query.bloodPressureMin);
+		var bloodPressureMax = parseInt(query.bloodPressureMax);
+		var pulseRate = parseInt(query.pulseRate);
 
 		console.log("Query : " + JSON.stringify(query));
 
 		
-		if(!query.doctorId || !query.nurseId || !query.patientId || !query.machineId || !query.bloodPressure || !query.pulseRate){
+		if(!query.doctorId || !query.nurseId || !query.patientId || !query.machineId || !query.bloodPressureMin || !query.bloodPressureMax || !query.pulseRate){
 			self.emit ('done', 'Parameter missing: suite_id');
 			return;
 		} else{
@@ -29,7 +30,7 @@ function Handler ()
 			//console.log("pg date : " + pg.to_timestamp(currentTime, "DD Mon YYY HH MI SS"));
 			pg.connect (global.database, function (err, client, done)
 			{
-				client.query ('INSERT INTO healthdata (doctorid, nurseid, patientid, machineid, bloodpressure, pulserate, timestamp) VALUES ($1, $2, $3, $4, $5, $6, $7)', [doctorId, nurseId, patientId, machineId, bloodPressure, pulseRate, new Date()], function (err, result)
+				client.query ('INSERT INTO healthdata (doctorid, nurseid, patientid, machineid, bloodpressuremin, bloodpressuremax, pulserate, timestamp) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [doctorId, nurseId, patientId, machineId, bloodPressureMin, bloodPressureMax, pulseRate, new Date()], function (err, result)
 				{
 					done ();
 					if (err)

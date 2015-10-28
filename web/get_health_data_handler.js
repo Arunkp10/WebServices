@@ -15,14 +15,14 @@ function Handler ()
 		console.log("Query : " + JSON.stringify(query));
 		
 		if(!query.patientId){
-			self.emit ('done', 'Parameter missing: suite_id');
+			self.emit ('done', 'Parameter missing: patientId');
 			return;
 		} else{
 			var currentTime = new Date().toUTCString();
 			console.log("Current time : " + currentTime);
 			pg.connect (global.database, function (err, client, done)
 			{
-				client.query ('SELECT doctorid, nurseid, patientid, machineid, bloodpressure, pulserate, timestamp FROM healthdata WHERE patientid=$1', [patientId], function (err, result)
+				client.query ('SELECT doctorid, nurseid, patientid, machineid, bloodpressuremin, bloodpressuremax, pulserate, timestamp FROM healthdata WHERE patientid=$1', [patientId], function (err, result)
 				{
 					done ();
 

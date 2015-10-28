@@ -28,7 +28,8 @@ var formatDataRow = function(data){
 		'<td  class="text-primary">' + data.nurseid + '</td>' +
 		'<td  class="text-primary">' + data.machineid + '</td>' +
 		'<td  class="text-primary">' + data.patientid + '</td>' +
-		'<td  class="text-primary">' + data.bloodpressure + '</td>' +
+		'<td  class="text-primary">' + data.bloodpressuremin + '</td>' +
+		'<td  class="text-primary">' + data.bloodpressuremax + '</td>' +
 		'<td  class="text-primary">' + data.pulserate + '</td>' +
 		'</tr>';
 		return row;
@@ -41,13 +42,15 @@ $(document).ready(function(){
 		var nurId = $("#nurId").val();
 		var patId = $("#patId").val();
 		var macId = $("#macId").val();
-		var bloodPres = $("#bloodPres").val();
+		var bloodPresMin = $("#bloodPresmin").val();
+		var bloodPresMax = $("#bloodPresmax").val();
 		var pulseRate = $("#pulseRate").val();
 		console.log(" DocId " + docId);
 		console.log(" NurId " + nurId);
 		console.log(" PatId " + patId);
 		console.log(" MacId " + macId);
-		console.log(" BP " + bloodPres);
+		console.log(" BP " + bloodPresMin);
+		console.log(" BP " + bloodPresMax);
 		console.log(" Pulse Rate " + pulseRate);
 
 		callServer ('insert_health_data', {
@@ -55,7 +58,8 @@ $(document).ready(function(){
 			nurseId: nurId, 
 			patientId: patId, 
 			machineId: macId, 
-			bloodPressure: bloodPres, 
+			bloodPressureMin: bloodPresMin,
+			bloodPressureMax: bloodPresMax,
 			pulseRate:pulseRate}, 
 			function (err, data){
 			if (err)
