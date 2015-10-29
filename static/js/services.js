@@ -10,6 +10,9 @@ $(document).ready(function()
 		} else if($(this).data('ws-id')==3){
 			var url = './displaySummary';
 			location.href = url;
+		} else if($(this).data('ws-id')==4){
+			var url = './callBarcodeService?id="' + $(this).data('ws-id') + '"';
+			location.href = url;
 		}
 		
 	});
@@ -24,6 +27,9 @@ $(document).ready(function()
 	},{
 		"id":3,
 		"name":"DisplaySummary"
+	},{
+		"id":4,
+		"name":"InsertBarcodeData"
 	}];
 	for (var n in webServices){
 		var row = formatSuiteRow (webServices[n]);

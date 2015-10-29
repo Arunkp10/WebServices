@@ -22,7 +22,7 @@ block content
 				.panel-body.details
 					dl.dl-horizontal
 						dt Doctor Id
-						dd#suite-name&nbsp; 
+						dd#suite-name
 							input#docId(type="text")
 						dt Nurse Id
 						dd#suite-test-count &nbsp;
@@ -42,6 +42,11 @@ block content
 						dt Pulse Rate
 						dd#suite-record-id &nbsp;
 							input#pulseRate(type="text")
+						dt image upload
+						dd#suite-record-id &nbsp;
+							form(action="/image", method="post", enctype="multipart/form-data")
+								input(type="file", name="icu")
+								input(type="submit", value="submit")
 				.panel-footer
 					.btn-group
 						button.btn.btn-success.dropdown-toggle#insertHealthData Call WebService API
@@ -50,7 +55,7 @@ block content
 				.panel-body.details
 					dl.dl-horizontal
 						dt PatientId
-						dd#suite-name&nbsp; 
+						dd#suite-name 
 							input#getPatientId(type="text")
 				.panel-footer
 					.btn-group

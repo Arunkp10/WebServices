@@ -5,7 +5,6 @@ pg.defaults.user = "postgres";
 pg.defaults.password = "root";
 
 var util = require('util');
-
 var auth = require ('basic-auth');
 var nconf = require('nconf');
 var express = require ('express');
@@ -16,7 +15,6 @@ var app = express ();
 var server = require ('http').createServer (app);
 global.io = require('socket.io') (server);
 var aws = require ('aws-sdk');
-
 app.set ('views', __dirname + '/../views');
 app.set ('view engine', 'jade');
 
@@ -26,11 +24,6 @@ app.use (bodyparser.urlencoded({extended: true, type: 'application/x-www-form-ur
 app.use (multer ({dest: './upload'}));
 app.use (express.static (__dirname + '/../static'));
 
-/*app.use (/^\/(?!interface)/, function (req, res, next)
-{
-	console.log ("Non-interface request");
-	next ();
-});*/
 
 // Load configuration values
 nconf.argv ();
@@ -55,8 +48,7 @@ files.forEach(function(file)
 });
 
 /* Capture SIGINT (Ctrl-C) and exit {{{1 */
-process.on ('SIGINT', function ()
-{
+process.on ('SIGINT', function (){
 	console.log ('SIGINT received, starting exit');
 	process.exit ();
 });
@@ -151,6 +143,44 @@ app.get ('/package/:filename', function (request, response)
 	});
 });
 
+
+app.post('/images', function (request, response){
+	console.log("Upload Success !" + JSON.stringify(request.files));
+	console.log("Upload Success !" + JSON.stringify(request.body));
+	var barcodeData = request.body.barcode;
+	var answer = {};
+	var xmlname = request.files.icu.originalname;
+	// response to be implemented
+
+	pg.connect (global.database, function (err, client, done)
+	{
+		client.query ('INSERT INTO barcoderesult (productid, xmlname) VALUES ($1, $2)', [barcodeData, xmlname], function (err, result)
+		{
+			done ();
+			if (err)
+			{
+				answer.result = "error";
+				amswer.message = err;
+				return;
+			} else {
+				answer.result = "ok";
+				answer.message = "Insert successfull"
+			}
+		});	
+	});
+	answer = {result: 'ok', message: "Upload success !"};
+	response.send (answer);
+});
+
+
+app.post('/image', function (request, response){
+	console.log("Upload Success !" + JSON.stringify(request.files));
+	console.log("Upload Success !" + JSON.stringify(request.body));
+	answer.result = "ok";
+	answer.message = "Insert successfull";
+	response.send (answer);
+});
+
 /* Main REST interface handler {{{1 */
 app.post ('/interface', function (request, response)
 {
@@ -158,7 +188,8 @@ app.post ('/interface', function (request, response)
 	var systolicOutOfRange = false;
 	var diastolicOutOfRange = false;
 	try
-	{
+	{	console.log("Ineset data : " + request.body.toString());
+		console.log("Ineset data : " + JSON.stringify(request.body));
 		if (!('operation' in request.body))
 			throw 'Missing parameter: operation';
 
@@ -213,6 +244,10 @@ app.get ('/services', basicAuth, function (request, response, next){
 
 app.get('/callServices', basicAuth, function (request, response, next){
 	response.render('callServices',{pretty: true, id: request.query.id});
+});
+
+app.get('/callBarcodeService', basicAuth, function (request, response, next){
+	response.render('callBarcodeService',{pretty: true, id: request.query.id});
 });
 
 app.get('/displaySummary', basicAuth, function (request, response, next){

@@ -1,0 +1,54 @@
+extend layout
+
+block script
+	script(src="js/callBarcodeService.js")
+
+	script.
+		//- Add suite id as JavaScript variable on page
+		var Id = !{id};
+	script(src="js/callBarcodeService.js")
+
+block content
+	.container
+		h4
+			ol.breadcrumb.bc-heading
+				li
+					a.text-muted(href="./services") Barcode Services
+				li.active
+					span.text-info#heading
+	
+			.panel.panel-primary#insert
+				.panel-heading API 1
+				.panel-body.details
+					form(action="/images", method="post", enctype="multipart/form-data")
+						dl.dl-horizontal
+							dt Barcode
+							dd#suite-record-id
+								input#barcode(type="text", name="barcode")
+							dt image upload
+							dd#suite-record-id &nbsp;
+								input(type="file", name="icu")
+								input(type="submit", value="submit")
+					API to call Barcode image comparison API2
+				.panel-footer
+					.btn-group
+						button.btn.btn-success.dropdown-toggle#callBarcodeService1 Call WebService API
+			.panel.panel-primary#get
+				.panel-heading API 2
+				.panel-body.details
+					div
+						API to call Barcode image comparision API2
+				.panel-footer
+					.btn-group
+						button.btn.btn-success.dropdown-toggle#callBarcodeService2 Call WebService API
+
+		.panel.panel-primary
+			.panel-heading Response
+			table.table.table-hover#tests-table
+				thead
+					tr
+						th.col-md-6 Status
+						th.col-md-3 Message
+				tbody
+		script.
+			callRefresh();

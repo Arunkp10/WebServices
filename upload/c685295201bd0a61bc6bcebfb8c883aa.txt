@@ -1,0 +1,33 @@
+Rho Training:
+=============
+
+Day 1 :
+-------
+
+a) Self introduction.
+b) What is NativeApp, WebApp, HybridApp.
+c) What is RhoMobileSuite
+	a) RhoStudio
+	b) RhoMobile
+		1) Rhodes
+		2) RhoElements
+	c) RhoConnect
+	d) RhoHub
+	e) RhoGallery
+d) Installing RhoMobileStudio in Windows.
+e) RhoStudio setup for windows. ( JDK, Android SDK, and Android NDK.)
+f) Building a simple RhoMobile application using RhoStudio.
+g) Building a RhoMobile application via command line.
+
+Day 2 : 
+-------
+
+a) Common API's :
+	ex:
+	1) Application
+	2) System
+	3) Barcode
+	4) Camera
+	5) Signature
+b) Building RhoMobile app using RhoHub (cloud.)
+c) 
