@@ -4,7 +4,7 @@ $(document).ready(function()
 	$('#suites-table > tbody').on('click', 'tr', function (e)
 	{
 		// var url = './suite?id=' + $(this).data('suite-id');
-		if($(this).data('ws-id')==1 || $(this).data('ws-id')==2){
+		if($(this).data('ws-id')==1 || $(this).data('ws-id')==2 || $(this).data('ws-id')==5){
 			var url = './callServices?id="' + $(this).data('ws-id') + '"';
 			location.href = url;
 		} else if($(this).data('ws-id')==3){
@@ -13,7 +13,7 @@ $(document).ready(function()
 		} else if($(this).data('ws-id')==4){
 			var url = './callBarcodeService?id="' + $(this).data('ws-id') + '"';
 			location.href = url;
-		}
+		} 
 		
 	});
 	var table = $('#suites-table > tbody');
@@ -30,6 +30,9 @@ $(document).ready(function()
 	},{
 		"id":4,
 		"name":"InsertBarcodeData"
+	},{
+		"id":5,
+		"name":"GetIcuImage"
 	}];
 	for (var n in webServices){
 		var row = formatSuiteRow (webServices[n]);

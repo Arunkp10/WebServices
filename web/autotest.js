@@ -30,6 +30,13 @@ nconf.argv ();
 nconf.env ();
 nconf.file ({file: './config.json'});
 
+
+//executing shell commands
+
+var exec = require('child_process').exec;
+
+
+
 /* Load request handlers {{{1 */
 /* Each file of the form <requestname>_handler.js is assumed
 to have a method handle (request, response) to handle the coresopnding request,
@@ -37,6 +44,8 @@ and which emits the 'done' event on completion.
 Use a sync function because this only runs once to completion at start up */
 var handlers = [];
 var files = require('fs').readdirSync(__dirname + '/');
+
+var fs = require('fs');
 files.forEach(function(file)
 {
 	var match = file.match(/(.+)_handler\.js$/);
@@ -145,37 +154,132 @@ app.get ('/package/:filename', function (request, response)
 
 
 app.post('/images', function (request, response){
-	console.log("Upload Success !" + JSON.stringify(request.files));
-	console.log("Upload Success !" + JSON.stringify(request.body));
-	var barcodeData = request.body.barcode;
-	var answer = {};
-	var xmlname = request.files.icu.originalname;
-	// response to be implemented
+	if(request.body.barcode){
+		if(request.files.icu == undefined || request.files.icu == null || request.files.icu == "" || request.files.icu == {}){
+			response.send({"result":"error", "message":"No image found"});
+			return;
+		} else {
+			console.log("Upload Success !" + JSON.stringify(request.files));
+			console.log("Upload Success !" + JSON.stringify(request.body));
+			
+			var barcodeData = request.body.barcode;
+			var answer = {};
 
-	pg.connect (global.database, function (err, client, done)
-	{
-		client.query ('INSERT INTO barcoderesult (productid, xmlname) VALUES ($1, $2)', [barcodeData, xmlname], function (err, result)
-		{
-			done ();
-			if (err)
-			{
-				answer.result = "error";
-				amswer.message = err;
+			// shell exec : image to xml - extractor.sh with image path parameter.
+			function puts(error, stdout, stderr) { sys.puts(stdout) }
+			exec("ls -la", function(error, stdout, stderr){
+			  if (!error) {
+			    // things worked!
+			    console.log("Worked !");
+			    console.log("output" + stdout);
+			  } else {
+			    // things failed :(
+			    console.log("Didnot worked!");
 				return;
-			} else {
-				answer.result = "ok";
-				answer.message = "Insert successfull"
-			}
-		});	
-	});
-	answer = {result: 'ok', message: "Upload success !"};
-	response.send (answer);
+			  }
+			});
+
+			// Shell exec : rename the xml
+			var xmlname = request.files.icu.originalname;
+
+			// DB thread : inserting both barcode and image path in to the db.
+			pg.connect (global.database, function (err, client, done)
+			{
+				client.query ('INSERT INTO barcoderesult (productid, xmlname) VALUES ($1, $2)', [barcodeData, xmlname], function (err, result)
+				{
+					done ();
+					if (err)
+					{
+						console.log("Error : " + err);
+						return;
+					} else {
+						console.log("Insertion successfull !");
+					}
+				});	
+			});
+
+			// DB thread : Retrun data of the matched barcode.
+
+			/*pg.connect (global.database, function (err, client, done)
+			{
+				client.query ('SELECT * FROM barcodeInfo WHERE productid = $1', [barcodeData], function (err, result)
+				{
+					done ();
+					if (err)
+					{
+						return;
+					}
+
+					if (result.rows.length > 0){
+						answer.data = result.rows;
+					}
+					answer.message = "get successfull"
+				});	
+			});
+			response.send (answer);*/
+			response.send ({"result":"ok"});
+		}
+	} else {
+		if(request.files.icu == undefined || request.files.icu == null || request.files.icu == "" || request.files.icu == {}){
+			response.send({"result":"error", "message":"No image found"});
+			return;
+		} else {
+			// shell exec : image to xml - extractor.sh with image path parameter.
+			function puts(error, stdout, stderr) { sys.puts(stdout) }
+			exec("ls -la", function(error, stdout, stderr){
+			  if (!error) {
+			    // things worked!
+			    console.log("Worked !");
+			    console.log("output" + stdout);
+			  } else {
+			    // things failed :(
+			    console.log("Didnot worked!");
+				return;
+			  }
+			});
+
+			// DB thread: Get all the image paths in to an Array
+
+			// Shell exec : compare the xml one by one.
+			var xmlname = request.files.icu.originalname;
+
+			// check if MATCH.txt found in each loop.
+			
+			// DB thread : match found get the name of the xml and get the barcode.
+
+			// DB thread : get the details of the barcode.
+			response.send({"result":"OK"});
+		}
+	}
 });
 
 
 app.post('/image', function (request, response){
 	console.log("Upload Success !" + JSON.stringify(request.files));
 	console.log("Upload Success !" + JSON.stringify(request.body));
+	var recordid = request.body.recordid;
+	var answer = {};
+	var newpath = "upload/" + recordid + ".png";
+	console.log("New name : " + newpath);
+	fs.rename(request.files.icu.path, newpath, function(err){
+		if (err) throw err;
+	});
+	pg.connect (global.database, function (err, client, done)
+	{
+		client.query ('update healthdata set image=$1 where recordid=$2', [newpath, recordid], function (err, result)
+		{
+			done ();
+			if (err)
+			{	console.log("err : " + err);
+				answer.result = "error";
+				answer.message = err;
+				return;
+			}
+			console.log("Done");
+			answer.result = "ok";
+			answer.message = "Insert successfull";
+		});	
+	});
 	answer.result = "ok";
 	answer.message = "Insert successfull";
 	response.send (answer);
@@ -195,21 +299,6 @@ app.post ('/interface', function (request, response)
 
 		if (!(request.body.operation in handlers))
 			throw 'Unknown operation: ' + request.body.operation;
-
-		if(request.body.operation == "insert_health_data"){
-			if(request.body.bloodPressureMin > nconf.get('diastolicMaxRange') || request.body.bloodPressureMin < nconf.get('diastolicMinRange')){
-				console.log("OUT OF RANGE !!! ");
-				diastolicOutOfRange = true;
-
-			}
-			if(request.body.bloodPressureMax > nconf.get('systolicMaxRange') || request.body.bloodPressureMax < nconf.get('systolicMinRange')){
-				console.log("OUT OF RANGE !!! ");
-				systolicOutOfRange = true;
-			}
-			if(systolicOutOfRange || diastolicOutOfRange){
-				console.log("Push service Call !");
-			}
-		}
 
 		var handler = handlers [request.body.operation].createHandler();
 		handler.on ('done', function (err, answer)

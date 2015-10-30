@@ -42,9 +42,13 @@ block content
 						dt Pulse Rate
 						dd#suite-record-id &nbsp;
 							input#pulseRate(type="text")
+						dt ResponseId
+						dd#suite-record-id &nbsp;
+							
 						dt image upload
 						dd#suite-record-id &nbsp;
 							form(action="/image", method="post", enctype="multipart/form-data")
+								input(type="text", name="recordid")
 								input(type="file", name="icu")
 								input(type="submit", value="submit")
 				.panel-footer
@@ -60,6 +64,20 @@ block content
 				.panel-footer
 					.btn-group
 						button.btn.btn-success.dropdown-toggle#getHealthData Call WebService API
+
+			.panel.panel-primary#getIcu
+				.panel-heading Get icu image
+				.panel-body.details
+					dl.dl-horizontal
+						dt PatientId
+						dd#suite-name 
+							input#getPatId(type="text" name="patientId")
+						dt RecordID
+						dd#suite-name 
+							input#getRecId(type="text" name="patientId")
+				.panel-footer
+					.btn-group
+						button.btn.btn-success.dropdown-toggle#getIcuImage Call WebService API
 
 		.panel.panel-primary
 			.panel-heading Response

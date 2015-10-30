@@ -5,15 +5,23 @@ var callRefresh = function(){
 		$("#insert").show();
 		$("#get").hide();
 		$("#data").hide();
+		$("#getIcu").hide();
 	} else if(Id=="2") {
 		console.log("get");
 		$("#insert").hide();
+		$("#getIcu").hide();
 		$("#get").show();
 		$("#data").show();
 	} else if(Id == "3") {
 		$("#insert").hide();
 		$("#get").hide();
 		$("#data").hide();
+		$("#getIcu").hide();
+	} else if(Id == "5") {
+		$("#insert").hide();
+		$("#get").hide();
+		$("#data").hide();
+		$("#getIcu").show();
 	}
 };
 var formatRow = function(status, message){
@@ -93,6 +101,24 @@ $(document).ready(function(){
 				for(var i in data.data){
 					table2.append(formatDataRow(data.data[i]))
 				};
+			});
+		}
+	});
+	$("#getIcuImage").unbind();
+	$("#getIcuImage").bind("click", function(){
+		console.log("get ICU image Data triggered !");
+		var getPatId = $("#getPatId").val();
+		var getRecId = $("#getRecId").val();
+		if(getPatId == "" || getRecId == ""){
+			console.log("Error : null paramenter");
+		} else {
+			callServer('get_icu_image', {
+				patientId: getPatId,
+				recId: getRecId
+			}, function(err, data){
+				if(err)
+					return;
+				console.log("get_icu_image : "+ JSON.stringify(data));
 			});
 		}
 	});
