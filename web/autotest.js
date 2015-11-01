@@ -23,6 +23,7 @@ app.use (bodyparser.json());
 app.use (bodyparser.urlencoded({extended: true, type: 'application/x-www-form-urlencoded'}));
 app.use (multer ({dest: './upload'}));
 app.use (express.static (__dirname + '/../static'));
+app.use ('/upload', express.static('upload'));
 
 
 // Load configuration values
@@ -259,14 +260,18 @@ app.post('/image', function (request, response){
 	console.log("Upload Success !" + JSON.stringify(request.body));
 	var recordid = request.body.recordid;
 	var answer = {};
-	var newpath = "upload/" + recordid + ".png";
+	var fileName = request.files.icu.originalname;
+	var newName = fileName.toString();
+	var newNameArray = newName.split('.');
+
+	var newpath = "upload/" + request.files.icu.originalname;
 	console.log("New name : " + newpath);
 	fs.rename(request.files.icu.path, newpath, function(err){
 		if (err) throw err;
 	});
 	pg.connect (global.database, function (err, client, done)
 	{
-		client.query ('update healthdata set image=$1 where recordid=$2', [newpath, recordid], function (err, result)
+		client.query ('update healthdata set image=$1 where recordid=$2', [newpath, newNameArray[0]], function (err, result)
 		{
 			done ();
 			if (err)
@@ -329,6 +334,11 @@ app.get ('/', basicAuth, function (request, response){
 // Render services page
 app.get ('/services', basicAuth, function (request, response, next){
 	response.render ('services', {pretty: true});
+});
+
+// Render get Image Page
+app.get('/getImage', function (request, response){
+	response.render ('getImage', {pretty: true});
 });
 
 app.get('/callServices', basicAuth, function (request, response, next){

@@ -1,0 +1,32 @@
+extend layout
+
+block script
+	script(src="js/getImage.js")
+
+	script.
+		//- Add suite id as JavaScript variable on page
+		var Id = !{id};
+	script(src="js/getImage.js")
+
+block content
+	.container
+		h4
+			ol.breadcrumb.bc-heading
+				li
+					a.text-muted(href="./services") Services
+				li.active
+					span.text-info#heading
+	
+			.panel.panel-primary#insert
+				.panel-heading Get Image
+				.panel-body.details
+					dl.dl-horizontal
+						dt Patient Id
+						dd#suite-name
+							input#docId(type="text" name="patientId")
+						dt Record Id
+						dd#suite-test-count &nbsp;
+							input#nurId(type="text" name="recId")
+				.panel-footer
+					.btn-group
+						button.btn.btn-success.dropdown-toggle#getImage Call WebService API

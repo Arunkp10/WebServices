@@ -2,6 +2,10 @@
 
 var events = require ('events');
 var pg = require ('pg');
+var nconf = require('nconf');
+nconf.argv ();
+nconf.env ();
+nconf.file ({file: './config.json'});
 
 function Handler ()
 {
@@ -23,7 +27,7 @@ function Handler ()
 			console.log("Current time : " + currentTime);
 			pg.connect (global.database, function (err, client, done)
 			{
-				client.query ('SELECT image FROM healthdata WHERE recordid=$1', [recId], function (err, result)
+				client.query ('SELECT image FROM healthdata WHERE recordid=$1 AND patientid=$2', [recId, patientId], function (err, result)
 				{
 					done ();
 
@@ -34,9 +38,11 @@ function Handler ()
 					}
 
 					if (result.rows.length > 0){
-						answer.data = result.rows;
+						var path = "http://"+nconf.get('server_ip') + ":"+ nconf.get('server_port') + "/" + result.rows[0].image;
+						console.log("Image path : " + path);
+						answer.path = path;
 					}
-					answer.message = "get successfull"
+					answer.message = "get successfull";
 					self.emit ('done', null, answer);
 				});	
 			});
